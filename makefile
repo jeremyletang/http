@@ -22,18 +22,19 @@
 all: lib test
 
 lib:
-	ocamlbuild -use-ocamlfind http_parser.cma
+	@ocamlbuild -use-ocamlfind httparser.cma
 
 test:
-	ocamlbuild -use-ocamlfind http_parser_test.native
+	@ocamlbuild -use-ocamlfind httparser_test.native
 .PHONY: test
 
 clean:
 	@rm -rf _build
-	@rm -rf http_parser_test.native
+	@rm -rf httparser_test.native
 
 run: test
-	./http_parser_test.native
+	@./httparser_test.native
+.PHONY: run
 
 help:
 	@echo "here is a list of available options for this makefile"

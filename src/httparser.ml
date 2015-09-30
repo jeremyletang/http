@@ -21,7 +21,7 @@
 (* CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.       *)
 (************************************************************************************)
 
-module Http_parser = struct
+module Httparser = struct
 
 type request =
   { methods: string option;

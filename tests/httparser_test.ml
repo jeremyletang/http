@@ -1,5 +1,9 @@
 open OUnit
-open Http_parser
+open Httparser
+
+let test_f test_ctx =
+    assert_equal 42 (Httparser.f 40 2)
+;;
 
 let suite = "OUnit Example" >::: ["test_f" >:: test_f]
 
