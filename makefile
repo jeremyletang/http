@@ -36,6 +36,10 @@ run: test
 	@./httparser_test.native
 .PHONY: run
 
+deps:
+	opam install ounit
+	opam install ocamlfind
+
 help:
 	@echo "here is a list of available options for this makefile"
 	@echo "... all - default option"
@@ -43,5 +47,6 @@ help:
 	@echo "... test"
 	@echo "... clean"
 	@echo "... run"
+	@echo "... deps"
 	@echo "... help"
 .PHONY: help
