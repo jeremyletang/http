@@ -59,8 +59,9 @@ let rec remove_lf_prefix buf =
 let rec remove_blank_prefix buf =
   let len = Bytes.length buf in
   let cleaned = remove_crlf_prefix (remove_lf_prefix buf) in
-  if len == Bytes.length cleaned then cleaned
-  else remove_blank_prefix cleaned
+  match Bytes.length cleaned with
+  | l when l == len -> cleaned
+  | _ -> remove_blank_prefix cleaned
 ;;
 
 let split buf =
@@ -105,12 +106,14 @@ let http_version_of_bytes buf =
 let build_request_line raw_list =
   let split_first_token buf =
     let len = Bytes.length buf in
-    if Bytes.contains buf ' ' then
+    match Bytes.contains buf ' ' with
+    | true ->
       let idx = Bytes.index buf ' ' in
       Some (Bytes.sub buf 0 (idx)), Bytes.sub buf idx (len - idx)
-    else
-      if len != 0 then Some (Bytes.sub buf 0 len), ""
-      else None, ""
+    | _ ->
+      (match len with
+       | 0 -> None, ""
+       | _ -> Some (Bytes.sub buf 0 len), "")
   in
   match raw_list with
   | hd::tl ->
@@ -142,10 +145,6 @@ let make_request buf =
   | None -> None
   in
 
-  { verb = verb;
-    path = path;
-    version = real_version;
-    headers = headers;
-    body = body }
+  { verb = verb; path = path; version = real_version; headers = headers; body = body }
 ;;
 
