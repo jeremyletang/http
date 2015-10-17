@@ -126,8 +126,7 @@ let build_request_line raw_list =
 
 let make_body raw_list =
   (* List.iter (printf "%s") raw_list; *)
-  let rec skip_headers raw_list =
-    match raw_list with
+  let rec skip_headers = function
     | [] -> []
     | hd::tl when Bytes.length hd == 0 -> tl
     | _::tl -> skip_headers tl

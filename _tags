@@ -1,3 +1,4 @@
 <src> : include
+<src/parser/parser.ml> : for-pack(Http)
 <tests> : include
 true : package(ounit)

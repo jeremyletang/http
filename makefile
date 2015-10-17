@@ -22,18 +22,23 @@
 all: lib test
 
 lib:
-	@ocamlbuild -use-ocamlfind httparser.cma
+	@ocamlbuild -use-ocamlfind http.cma
 
 test:
-	@ocamlbuild -use-ocamlfind httparser_test.native
+	@ocamlbuild -use-ocamlfind parser_test.native
+	@ocamlbuild -use-ocamlfind header_test.native
 .PHONY: test
 
 clean:
 	@rm -rf _build
-	@rm -rf httparser_test.native
+	@rm -rf parser_test.native
+	@rm -rf header_test.native
 
 run: test
-	@./httparser_test.native
+	@echo "Running tests for Http.Parser"
+	@./parser_test.native
+	@echo "Running tests for Http.Header"
+	@./header_test.native
 .PHONY: run
 
 deps:
