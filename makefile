@@ -27,18 +27,19 @@ lib:
 test:
 	@ocamlbuild -use-ocamlfind parser_test.native
 	@ocamlbuild -use-ocamlfind header_test.native
+	@ocamlbuild -use-ocamlfind method_test.native
 .PHONY: test
 
 clean:
-	@rm -rf _build
-	@rm -rf parser_test.native
-	@rm -rf header_test.native
+	@ocamlbuild -clean
 
 run: test
 	@echo "Running tests for Http.Parser"
 	@./parser_test.native
 	@echo "Running tests for Http.Header"
 	@./header_test.native
+	@echo "Running tests for Http.Method"
+	@./method_test.native
 .PHONY: run
 
 deps:

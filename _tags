@@ -1,4 +1,12 @@
 <src> : include
-<src/parser/parser.ml> : for-pack(Http)
+<src/parser> : include
+
+# http pack
+<src/method.cmx> : for-pack(Http)
+
+# headers pack
+<src/headers/*.cmx> : for-pack(Header)
+<src/headers/*.cmi> : for-pack(Header)
+
 <tests> : include
 true : package(ounit)
