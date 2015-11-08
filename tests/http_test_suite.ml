@@ -21,42 +21,21 @@
 (* CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.       *)
 (************************************************************************************)
 
+open Printf
 open OUnit
-open Http
+open List
 
-let test_of_int _ =
-  assert_equal Status.NotFound (Status.of_int 404);
-  assert_equal (Status.Unknown 2000) (Status.of_int 2000);
+let run_test_suite = function
+  | TestLabel (name, tests) ->
+    printf "Running tests for %s\n" name;
+    ignore(run_test_tt_main tests)
+  | _ -> printf "Unknown test suite";
 ;;
 
-let test_is_informational _ =
-    assert_equal true (Status.is_informational Status.Processing);
-    assert_equal false (Status.is_informational Status.NotFound);
+let _ =
+  List.iter run_test_suite [Header_test.suite;
+                            Method_test.suite;
+                            Parser_test.suite;
+                            Status_test.suite;
+                            Version_test.suite;]
 ;;
-
-let test_is_success _ =
-    assert_equal true (Status.is_success Status.Accepted);
-    assert_equal false (Status.is_success Status.InternalServerError);
-;;
-
-let test_is_redirection _ =
-    assert_equal true (Status.is_redirection Status.UseProxy);
-    assert_equal false (Status.is_redirection Status.NotFound);
-;;
-
-let test_is_client_error _ =
-    assert_equal true (Status.is_client_error Status.NotFound);
-    assert_equal false (Status.is_client_error Status.Processing);
-;;
-
-let test_is_server_error _ =
-    assert_equal true (Status.is_server_error Status.BadGateway);
-    assert_equal false (Status.is_server_error Status.NotFound);
-;;
-
-let suite = "Http.Status suite" >::: ["test_of_int" >:: test_of_int;
-                                      "test_is_informational" >:: test_is_informational;
-                                      "test_is_success" >:: test_is_success;
-                                      "test_is_redirection" >:: test_is_redirection;
-                                      "test_is_client_error" >:: test_is_client_error;
-                                      "test_is_server_error" >:: test_is_server_error]

@@ -30,7 +30,3 @@ open Printf
 let test_1 _ = assert_equal true true;;
 
 let suite = "Http.Header suite" >::: ["test_1" >:: test_1;]
-
-let _ =
-  run_test_tt_main suite
-;;

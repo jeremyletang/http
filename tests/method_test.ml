@@ -75,6 +75,3 @@ let suite = "Http.Method suite" >::: ["test_of_string" >:: test_of_string;
                                       "test_is_idempotent" >:: test_is_idempotent;
                                       "test_is_not_idempotent" >:: test_is_not_idempotent]
 
-let _ =
-  run_test_tt_main suite
-;;

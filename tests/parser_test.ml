@@ -132,6 +132,3 @@ let suite = "Http.Parser suite" >::: ["test_split_empty" >:: test_split_empty;
                                       "test_build_request_line_nothing_valid_empty" >:: test_build_request_line_nothing_valid_empty;
                                       "test_make_body" >:: test_make_body]
 
-let _ =
-  run_test_tt_main suite
-;;

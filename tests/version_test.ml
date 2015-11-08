@@ -38,7 +38,3 @@ let suite = "Http.Version suite" >::: ["test_http_version_of_string_valid_11" >:
                                       "test_http_version_of_string_valid_11_capitalized" >:: test_http_version_of_string_valid_11_capitalized;
                                       "test_http_version_of_string_valid_10" >:: test_http_version_of_string_valid_10;
                                       "test_http_version_of_string_invalid" >:: test_http_version_of_string_invalid]
-
-let _ =
-  run_test_tt_main suite
-;;

@@ -25,27 +25,14 @@ lib:
 	@ocamlbuild -use-ocamlfind http.cma
 
 test:
-	@ocamlbuild -use-ocamlfind parser_test.native
-	@ocamlbuild -use-ocamlfind header_test.native
-	@ocamlbuild -use-ocamlfind method_test.native
-	@ocamlbuild -use-ocamlfind status_test.native
-	@ocamlbuild -use-ocamlfind version_test.native
+	@ocamlbuild -use-ocamlfind http_test_suite.native
 .PHONY: test
 
 clean:
 	@ocamlbuild -clean
 
 run: test
-	@echo "Running tests for Http.Parser"
-	@./parser_test.native
-	@echo "Running tests for Http.Header"
-	@./header_test.native
-	@echo "Running tests for Http.Method"
-	@./method_test.native
-	@echo "Running tests for Http.Status"
-	@./status_test.native
-	@echo "Running tests for Http.Version"
-	@./version_test.native
+	@./http_test_suite.native
 .PHONY: run
 
 deps:
