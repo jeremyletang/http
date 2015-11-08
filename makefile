@@ -28,6 +28,8 @@ test:
 	@ocamlbuild -use-ocamlfind parser_test.native
 	@ocamlbuild -use-ocamlfind header_test.native
 	@ocamlbuild -use-ocamlfind method_test.native
+	@ocamlbuild -use-ocamlfind status_test.native
+	@ocamlbuild -use-ocamlfind version_test.native
 .PHONY: test
 
 clean:
@@ -40,6 +42,10 @@ run: test
 	@./header_test.native
 	@echo "Running tests for Http.Method"
 	@./method_test.native
+	@echo "Running tests for Http.Status"
+	@./status_test.native
+	@echo "Running tests for Http.Version"
+	@./version_test.native
 .PHONY: run
 
 deps:

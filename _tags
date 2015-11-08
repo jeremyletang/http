@@ -1,8 +1,10 @@
 <src> : include
-<src/parser> : include
 
 # http pack
 <src/method.cmx> : for-pack(Http)
+<src/status.cmx> : for-pack(Http)
+<src/parser.cmx> : for-pack(Http)
+<src/version.cmx> : for-pack(Http)
 
 # headers pack
 <src/headers/*.cmx> : for-pack(Header)

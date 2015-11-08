@@ -22,7 +22,7 @@
 (************************************************************************************)
 
 open OUnit
-open Parser
+open Http
 open Bytes
 open List
 
@@ -77,15 +77,6 @@ let test_remove_blank_prefix_only_crlf _ =  assert_equal "" (Parser.remove_blank
 let test_remove_blank_prefix_simple_crlf _ =
   assert_equal "GET / HTTP/1.1\r\n" (Parser.remove_blank_prefix "\r\nGET / HTTP/1.1\r\n");;
 
-let test_http_version_of_string_valid_11 _ =
-  assert_equal (Some Parser.Http11) (Parser.http_version_of_bytes "http/1.1");;
-let test_http_version_of_string_valid_11_capitalized _ =
-  assert_equal (Some Parser.Http11) (Parser.http_version_of_bytes "HTTP/1.1");;
-let test_http_version_of_string_valid_10 _ =
-  assert_equal (Some Parser.Http10) (Parser.http_version_of_bytes "http/1.0");;
-let test_http_version_of_string_invalid _ =
-  assert_equal None (Parser.http_version_of_bytes "BLAH");;
-
 let test_build_request_line_valid_ok _ =
   let ok1 = Parser.split "GET /home HTTP/1.1\r\n" in
   assert_equal (Some "GET", Some "/home", Some "HTTP/1.1") (Parser.build_request_line ok1);;
@@ -110,7 +101,7 @@ let test_make_body _ =
   assert_equal (Some "hello world") b;
 ;;
 
-let suite = "Parser suite" >::: ["test_split_empty" >:: test_split_empty;
+let suite = "Http.Parser suite" >::: ["test_split_empty" >:: test_split_empty;
                                       "test_split_long" >:: test_split_long;
                                       "test_split_short" >:: test_split_short;
                                       "test_split_crlf_only" >:: test_split_crlf_only;
@@ -133,10 +124,6 @@ let suite = "Parser suite" >::: ["test_split_empty" >:: test_split_empty;
                                       "test_remove_blank_prefix_long_empty" >:: test_remove_blank_prefix_long_empty;
                                       "test_remove_blank_prefix_only_crlf" >:: test_remove_blank_prefix_only_crlf;
                                       "test_remove_blank_prefix_simple_crlf" >:: test_remove_blank_prefix_simple_crlf;
-                                      "test_http_version_of_string_valid_11" >:: test_http_version_of_string_valid_11;
-                                      "test_http_version_of_string_valid_11_capitalized" >:: test_http_version_of_string_valid_11_capitalized;
-                                      "test_http_version_of_string_valid_10" >:: test_http_version_of_string_valid_10;
-                                      "test_http_version_of_string_invalid" >:: test_http_version_of_string_invalid;
                                       "test_build_request_line_valid_ok" >:: test_build_request_line_valid_ok;
                                       "test_build_request_line_valid_ok_sanitized" >:: test_build_request_line_valid_ok_sanitized;
                                       "test_build_request_line_not_ok_version_invalid" >:: test_build_request_line_not_ok_version_invalid;

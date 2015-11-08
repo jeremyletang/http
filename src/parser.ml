@@ -29,10 +29,8 @@ let cr = '\r';;
 let ln = '\n';;
 let crlf = Bytes.of_string "\r\n";;
 
-type http_version = Http10 | Http11
-
 type request =
-  { verb : string option; path : string option; version : http_version option;
+  { verb : string option; path : string option; version : Version.t option;
     headers : (string * string) list; body : string option }
 
 type response =
@@ -96,13 +94,6 @@ let make_headers raw =
   in List.rev (make_headers_rec raw [])
 ;;
 
-let http_version_of_bytes buf =
-  match Bytes.uppercase buf with
-  | "HTTP/1.1" -> Some Http11
-  | "HTTP/1.0" -> Some Http10
-  | _ -> None
-;;
-
 let build_request_line raw_list =
   let split_first_token buf =
     let len = Bytes.length buf in
@@ -140,7 +131,7 @@ let make_request buf =
   let body = make_body raw_list in
 
   let real_version = match version with
-  | Some v -> http_version_of_bytes v
+  | Some v -> Version.of_bytes v
   | None -> None
   in
 

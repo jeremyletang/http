@@ -21,43 +21,46 @@
 (* CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.       *)
 (************************************************************************************)
 
-open String
+open OUnit
+open Http
 
-type t = Options | Get | Head | Post | Put | Delete | Trace | Connect | Patch | Unknown of string
-
-let from_string s =
-  match String.uppercase s with
-  | "OPTIONS" -> Options
-  | "GET" -> Get
-  | "HEAD" -> Head
-  | "POST" -> Post
-  | "PUT" -> Put
-  | "DELETE" -> Delete
-  | "TRACE" -> Trace
-  | "CONNECT" -> Connect
-  | "PATCH" -> Patch
-  | _ -> Unknown s
+let test_of_int _ =
+  assert_equal Status.NotFound (Status.of_int 404);
+  assert_equal (Status.Unknown 2000) (Status.of_int 2000);
 ;;
 
-let to_string = function
-  | Options -> "OPTIONS"
-  | Get -> "GET"
-  | Head -> "HEAD"
-  | Post -> "POST"
-  | Put -> "PUT"
-  | Delete -> "DELETE"
-  | Trace -> "TRACE"
-  | Connect -> "CONNECT"
-  | Patch -> "PATCH"
-  | Unknown s -> s
+let test_is_informational _ =
+    assert_equal true (Status.is_informational Status.Processing);
+    assert_equal false (Status.is_informational Status.NotFound);
 ;;
 
-let is_safe = function
-  | Get | Head | Options | Trace -> true
-  | _ -> false
+let test_is_success _ =
+    assert_equal true (Status.is_success Status.Accepted);
+    assert_equal false (Status.is_success Status.InternalServerError);
 ;;
 
-let is_idempotent = function
-  | Get | Head | Options | Trace| Post | Delete -> true
-  | _ -> false
+let test_is_redirection _ =
+    assert_equal true (Status.is_redirection Status.UseProxy);
+    assert_equal false (Status.is_redirection Status.NotFound);
+;;
+
+let test_is_client_error _ =
+    assert_equal true (Status.is_client_error Status.NotFound);
+    assert_equal false (Status.is_client_error Status.Processing);
+;;
+
+let test_is_server_error _ =
+    assert_equal true (Status.is_server_error Status.BadGateway);
+    assert_equal false (Status.is_server_error Status.NotFound);
+;;
+
+let suite = "Http.Status suite" >::: ["test_of_int" >:: test_of_int;
+                                      "test_is_informational" >:: test_is_informational;
+                                      "test_is_success" >:: test_is_success;
+                                      "test_is_redirection" >:: test_is_redirection;
+                                      "test_is_client_error" >:: test_is_client_error;
+                                      "test_is_server_error" >:: test_is_server_error]
+
+let _ =
+  run_test_tt_main suite
 ;;

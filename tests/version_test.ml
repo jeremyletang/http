@@ -21,43 +21,24 @@
 (* CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.       *)
 (************************************************************************************)
 
-open String
+open Bytes
+open OUnit
+open Http
 
-type t = Options | Get | Head | Post | Put | Delete | Trace | Connect | Patch | Unknown of string
+let test_http_version_of_string_valid_11 _ =
+  assert_equal (Some Version.Http11) (Version.of_bytes "http/1.1");;
+let test_http_version_of_string_valid_11_capitalized _ =
+  assert_equal (Some Version.Http11) (Version.of_bytes "HTTP/1.1");;
+let test_http_version_of_string_valid_10 _ =
+  assert_equal (Some Version.Http10) (Version.of_bytes "http/1.0");;
+let test_http_version_of_string_invalid _ =
+  assert_equal None (Version.of_bytes "BLAH");;
 
-let from_string s =
-  match String.uppercase s with
-  | "OPTIONS" -> Options
-  | "GET" -> Get
-  | "HEAD" -> Head
-  | "POST" -> Post
-  | "PUT" -> Put
-  | "DELETE" -> Delete
-  | "TRACE" -> Trace
-  | "CONNECT" -> Connect
-  | "PATCH" -> Patch
-  | _ -> Unknown s
-;;
+let suite = "Http.Version suite" >::: ["test_http_version_of_string_valid_11" >:: test_http_version_of_string_valid_11;
+                                      "test_http_version_of_string_valid_11_capitalized" >:: test_http_version_of_string_valid_11_capitalized;
+                                      "test_http_version_of_string_valid_10" >:: test_http_version_of_string_valid_10;
+                                      "test_http_version_of_string_invalid" >:: test_http_version_of_string_invalid]
 
-let to_string = function
-  | Options -> "OPTIONS"
-  | Get -> "GET"
-  | Head -> "HEAD"
-  | Post -> "POST"
-  | Put -> "PUT"
-  | Delete -> "DELETE"
-  | Trace -> "TRACE"
-  | Connect -> "CONNECT"
-  | Patch -> "PATCH"
-  | Unknown s -> s
-;;
-
-let is_safe = function
-  | Get | Head | Options | Trace -> true
-  | _ -> false
-;;
-
-let is_idempotent = function
-  | Get | Head | Options | Trace| Post | Delete -> true
-  | _ -> false
+let _ =
+  run_test_tt_main suite
 ;;

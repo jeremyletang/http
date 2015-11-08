@@ -21,37 +21,35 @@
 (* CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.       *)
 (************************************************************************************)
 
-type http_version = Http10 | Http11
+open Bytes
 
-type request =
-  { verb : string option; path : string option; version : http_version option;
-    headers : (string * string) list; body : bytes option }
+type t = Http09 | Http10 | Http11 | Http20
 
-type response =
-  { code: int option; reason: string option; version: string option;
-    headers: (string * string) list; body: bytes option }
+let of_bytes buf =
+  match Bytes.uppercase buf with
+  | "HTTP/0.9" -> Some Http09
+  | "HTTP/1.0" -> Some Http10
+  | "HTTP/1.1" -> Some Http11
+  | "HTTP/2.0" -> Some Http20
+  | _ -> None
+;;
 
-(* Split the request in line with \r\n as delimiter *)
-val split : bytes -> bytes list
+let of_string = function
+  | "HTTP/0.9" -> Some Http09
+  | "HTTP/1.0" -> Some Http10
+  | "HTTP/1.1" -> Some Http11
+  | "HTTP/2.0" -> Some Http20
+  | _ -> None
+;;
 
-(* Remove blank lines before begining of the content *)
-val remove_blank_prefix : bytes -> bytes
-(* Remove lines containing only \r\n before the begining of the content *)
-val remove_crlf_prefix : bytes -> bytes
-(* Remove line scontaining only \n before the begining of the content *)
-val remove_lf_prefix : bytes -> bytes
+let as_string = function
+  | Http09 -> "HTTP/0.9"
+  | Http10 -> "HTTP/1.0"
+  | Http11 -> "HTTP/1.1"
+  | Http20 -> "HTTP/2.0"
+;;
 
-(* Create an http_version from a string *)
-val http_version_of_bytes : bytes -> http_version option
-
-(* Retrieve information from the request first line: verb, path, version *)
-val build_request_line : bytes list -> string option * string option * string option
-
-(* Create a list which contains all the headers from the request/response as a list of key, value *)
-val make_headers : bytes list -> (bytes * bytes) list
-
-(* Make the request / reponse body *)
-val make_body : bytes list ->  bytes option
-
-(* Create a new request from a bytes buffer *)
-val make_request : bytes -> request
+let is_valid v = match of_string v with
+  | Some _ -> true
+  | _ -> false
+;;

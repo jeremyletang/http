@@ -21,43 +21,33 @@
 (* CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.       *)
 (************************************************************************************)
 
-open String
 
-type t = Options | Get | Head | Post | Put | Delete | Trace | Connect | Patch | Unknown of string
+type request =
+  { verb : string option; path : string option; version : Version.t option;
+    headers : (string * string) list; body : bytes option }
 
-let from_string s =
-  match String.uppercase s with
-  | "OPTIONS" -> Options
-  | "GET" -> Get
-  | "HEAD" -> Head
-  | "POST" -> Post
-  | "PUT" -> Put
-  | "DELETE" -> Delete
-  | "TRACE" -> Trace
-  | "CONNECT" -> Connect
-  | "PATCH" -> Patch
-  | _ -> Unknown s
-;;
+type response =
+  { code: int option; reason: string option; version: string option;
+    headers: (string * string) list; body: bytes option }
 
-let to_string = function
-  | Options -> "OPTIONS"
-  | Get -> "GET"
-  | Head -> "HEAD"
-  | Post -> "POST"
-  | Put -> "PUT"
-  | Delete -> "DELETE"
-  | Trace -> "TRACE"
-  | Connect -> "CONNECT"
-  | Patch -> "PATCH"
-  | Unknown s -> s
-;;
+(* Split the request in line with \r\n as delimiter *)
+val split : bytes -> bytes list
 
-let is_safe = function
-  | Get | Head | Options | Trace -> true
-  | _ -> false
-;;
+(* Remove blank lines before begining of the content *)
+val remove_blank_prefix : bytes -> bytes
+(* Remove lines containing only \r\n before the begining of the content *)
+val remove_crlf_prefix : bytes -> bytes
+(* Remove line scontaining only \n before the begining of the content *)
+val remove_lf_prefix : bytes -> bytes
 
-let is_idempotent = function
-  | Get | Head | Options | Trace| Post | Delete -> true
-  | _ -> false
-;;
+(* Retrieve information from the request first line: verb, path, version *)
+val build_request_line : bytes list -> string option * string option * string option
+
+(* Create a list which contains all the headers from the request/response as a list of key, value *)
+val make_headers : bytes list -> (bytes * bytes) list
+
+(* Make the request / reponse body *)
+val make_body : bytes list ->  bytes option
+
+(* Create a new request from a bytes buffer *)
+val make_request : bytes -> request
