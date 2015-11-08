@@ -166,7 +166,7 @@ let of_int = function
   | c -> Unknown c
 ;;
 
-let as_int = function
+let to_int = function
   | Continue -> 100
   | SwitchingProtocols -> 101
   | Processing -> 102
@@ -236,7 +236,7 @@ let as_int = function
   | Unknown c -> c
 ;;
 
-let as_string = function
+let to_string = function
   | Continue -> "Continue"
   | SwitchingProtocols -> "Switching Protocols"
   | Processing -> "Processing"
@@ -307,26 +307,26 @@ let as_string = function
 ;;
 
 let is_informational = function
-  | c when as_int c >= as_int Continue && as_int c <= as_int Processing -> true
+  | c when to_int c >= to_int Continue && to_int c <= to_int Processing -> true
   | _ -> false
 ;;
 
 let is_success = function
-  | c when as_int c >= as_int Ok && as_int c <= as_int IMUsed -> true
+  | c when to_int c >= to_int Ok && to_int c <= to_int IMUsed -> true
   | _ -> false
 ;;
 
 let is_redirection = function
-  | c when as_int c >= as_int MultipleChoices && as_int c <= as_int PermanentRedirect -> true
+  | c when to_int c >= to_int MultipleChoices && to_int c <= to_int PermanentRedirect -> true
   | _ -> false
 ;;
 
 let is_client_error = function
-  | c when as_int c >= as_int BadRequest && as_int c <= as_int UnavailableForLegalReasons -> true
+  | c when to_int c >= to_int BadRequest && to_int c <= to_int UnavailableForLegalReasons -> true
   | _ -> false
 ;;
 
 let is_server_error = function
-  | c when as_int c >= as_int InternalServerError && as_int c <= as_int NetworkConnectTimeoutError -> true
+  | c when to_int c >= to_int InternalServerError && to_int c <= to_int NetworkConnectTimeoutError -> true
   | _ -> false
 ;;

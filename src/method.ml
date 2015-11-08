@@ -25,7 +25,7 @@ open String
 
 type t = Options | Get | Head | Post | Put | Delete | Trace | Connect | Patch | Unknown of string
 
-let from_string s =
+let of_string s =
   match String.uppercase s with
   | "OPTIONS" -> Options
   | "GET" -> Get

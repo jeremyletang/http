@@ -25,10 +25,10 @@ open OUnit
 open Http
 open Bytes
 
-let test_from_string _ =
-    assert_equal Method.Get (Method.from_string "GET");
-    assert_equal Method.Post (Method.from_string "Post");
-    assert_equal (Method.Unknown "hello") (Method.from_string "hello");
+let test_of_string _ =
+    assert_equal Method.Get (Method.of_string "GET");
+    assert_equal Method.Post (Method.of_string "Post");
+    assert_equal (Method.Unknown "hello") (Method.of_string "hello");
 ;;
 
 let test_to_string _ =
@@ -68,7 +68,7 @@ let test_is_not_idempotent _ =
     assert_equal false (Method.is_idempotent (Method.Unknown "blah"));
 ;;
 
-let suite = "Http.Method suite" >::: ["test_from_string" >:: test_from_string;
+let suite = "Http.Method suite" >::: ["test_of_string" >:: test_of_string;
                                       "test_to_string" >:: test_to_string;
                                       "test_is_safe" >:: test_is_safe;
                                       "test_is_not_safe" >:: test_is_not_safe;

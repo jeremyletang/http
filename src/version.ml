@@ -42,7 +42,7 @@ let of_string = function
   | _ -> None
 ;;
 
-let as_string = function
+let to_string = function
   | Http09 -> "HTTP/0.9"
   | Http10 -> "HTTP/1.0"
   | Http11 -> "HTTP/1.1"
